@@ -1,0 +1,44 @@
+{
+  "name": "vvv",
+  "description": "vexatiously vacuous voxels",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/1j01/nope.git"
+  },
+  "bugs": {
+    "url": "http://github.com/1j01/sorry/issues"
+  },
+  "license": "MIT",
+  "keywords": [
+    "voxels",
+    "voxel",
+    "3d",
+    "three",
+    "three.js",
+    "game",
+    "engine"
+  ],
+  "scripts": {
+    "dev": "beefy --debug --live src/game.coffee",
+    "dev-wut": "beefy --live",
+    "start": "coffee src/server.coffee",
+    "b": "browserify -t coffeeify --extension=\".coffee\" src/game.coffee -o bundle.js",
+    "prepublish?": "coffee -o lib -c index.coffee"
+  },
+  "dependencies": {
+    "beefy": "^2.1.3",
+    "browserify": "^9.0.7",
+    "chokidar": "^1.0.0-rc5",
+    "coffee-script": "^1.9.1",
+    "coffeeify": "^1.0.0",
+    "express": "^4.12.3",
+    "three": "^0.70.0"
+  },
+  "browser": "index.coffee",
+  "browserify": {
+    "transform": [
+      "coffeeify"
+    ]
+  }
+}
