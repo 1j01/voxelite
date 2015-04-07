@@ -24,7 +24,7 @@
 # palette = (v for k, v of THREE.ColorKeywords when k.match /ra/)
 # palette = (v for k, v of THREE.ColorKeywords when k.match /oi/)
 
-r = 25#40
+r = 40
 ir = 0#r-4
 world.generate (x, y, z)->
 	if ir*ir <= x*x + y*y + z*z <= r*r
@@ -59,9 +59,9 @@ world.generate (x, y, z)->
 # console.profileEnd "Generate Meshes"
 
 # TRIGGER CHUNK GENERATION
-for x in [-r*2..r] by r
-	for y in [-r*2..r] by r
-		for z in [-r*2..r] by r
+for x in [-r*2..r] by Chunk.SIZE
+	for y in [-r*2..r] by Chunk.SIZE
+		for z in [-r*2..r] by Chunk.SIZE
 			do (x, y, z)->
 				setTimeout ->
 					world.get {x, y, z}
@@ -73,3 +73,7 @@ do animate = ->
 	renderer.render scene, camera
 	requestAnimationFrame animate
 
+window.onkeydown = (e)->
+	# console.log e.keyCode
+	if e.keyCode is 113 # F2
+		scene.debug = not scene.debug

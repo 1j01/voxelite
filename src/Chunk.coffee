@@ -1,8 +1,6 @@
 
 @chunks = []
-# mat = new T.MeshNormalMaterial
-# mat = new T.MeshBasicMaterial
-# mat = new T.MeshShaderMaterial
+
 voxel_mat = new T.MeshBasicMaterial
 	# wireframe: yes
 	color: 0xffffff
@@ -23,10 +21,10 @@ class @Chunk extends T.Object3D
 		
 		@_sullied = no
 		
-		debug = new THREE.BoxHelper
-		debug.scale.set SZ/2, SZ/2, SZ/2
-		debug.position.set SZ/2, SZ/2, SZ/2
-		@add debug
+		@debug = new THREE.BoxHelper
+		@debug.scale.set SZ/2, SZ/2, SZ/2
+		@debug.position.set SZ/2, SZ/2, SZ/2
+		@add @debug
 		
 		scene.add @
 		
@@ -46,6 +44,7 @@ class @Chunk extends T.Object3D
 					@set x, y, z, fn(x+@x*SZ, y+@y*SZ, z+@z*SZ)
 	
 	update: ->
+		@debug.visible = scene.debug
 		if @_sullied
 			@_sullied = no
 			scene.remove @mesh if @mesh
