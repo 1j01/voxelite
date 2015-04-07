@@ -17,7 +17,8 @@
 # 				(y/r*255)**2 +
 # 				(z/r*255)**3
 
-# palette = (v for k, v of THREE.ColorKeywords when Math.random() < 0.1)
+@palette = (v for k, v of THREE.ColorKeywords when Math.random() < 0.1)
+palette = [16119260, 14596231, 16744272, 12433259, 3100495, 16766720, 11393254, 2142890, 16777184, 9662683, 3978097, 16770229, 8421376, 13468991, 16119285]
 # palette = (v for k, v of THREE.ColorKeywords when k.match /en/) # green
 # palette = (v for k, v of THREE.ColorKeywords when k.match /ne/) # ice
 # palette = (v for k, v of THREE.ColorKeywords when k.match /se/)
@@ -27,15 +28,16 @@
 r = 40
 ir = 0#r-4
 world.generate (x, y, z)->
-	if ir*ir <= x*x + y*y + z*z <= r*r
+	if x*x + y*y + z*z <= r*r*(1+Math.cos(x/y/z))
 		# 0xafaf0f
 		# 0xffffff * (~~(Math.random()/3))
 		# 0xffffff * (~~(Math.random()*15))/15
 		# palette[~~(Math.random()*palette.length)]
-		x*y*z*z
-		# (x/r*255)**1 +
-		# (y/r*255)**2 +
-		# (z/r*255)**3
+		palette[~~((x/y/z)*palette.length)]
+		# x*y*z*z
+		# (x/r*255)**3 +
+		# (y/r*255)**1 +
+		# (z/r*255)**2
 	else
 		0
 	# 0xffffff * Math.random()
@@ -59,9 +61,10 @@ world.generate (x, y, z)->
 # console.profileEnd "Generate Meshes"
 
 # TRIGGER CHUNK GENERATION
-for x in [-r*2..r] by Chunk.SIZE
-	for y in [-r*2..r] by Chunk.SIZE
-		for z in [-r*2..r] by Chunk.SIZE
+gr = r * 4
+for x in [-gr..gr] by Chunk.SIZE
+	for y in [-gr..gr] by Chunk.SIZE
+		for z in [-gr..gr] by Chunk.SIZE
 			do (x, y, z)->
 				setTimeout ->
 					world.get {x, y, z}

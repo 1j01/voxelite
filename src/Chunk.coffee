@@ -12,7 +12,7 @@ voxel_mat = new T.MeshBasicMaterial
 # 	vertexColors: T.FaceColors
 
 class @Chunk extends T.Object3D
-	@SIZE: SZ = 20 # ha
+	@SIZE: SZ = 50 # take that, binary
 	constructor: ({@x, @y, @z})->
 		super
 		
@@ -50,7 +50,7 @@ class @Chunk extends T.Object3D
 			scene.remove @mesh if @mesh
 			# geometry = new GreedyGeometry @voxels, [SZ, SZ, SZ]
 			geometry = new MonotoneGeometry @voxels, [SZ, SZ, SZ]
-			geometry.computeFaceNormals()
+			# geometry.computeFaceNormals()
 			# geometry.computeVertexNormals()
 			@mesh = new T.Mesh(
 				geometry
