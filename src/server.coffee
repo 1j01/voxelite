@@ -3,10 +3,9 @@ express = require 'express'
 app = express()
 
 app.use express.static "."
-# app.get '/', (req, res)->
 
 app.listen 3333
-console.log "listening on port 3333"
+console.log 'listening on port 3333'
 
 # chokidar = require 'chokidar'
 # 
@@ -14,7 +13,7 @@ console.log "listening on port 3333"
 # 	ignored: /[\/\\]\./
 # 	persistent: yes
 # 
-# watcher.on 'change', (path, stats)->
+# watcher.on 'any', (path, stats)->
 # 	if stats
 # 		console.log 'File', path, 'changed size to', stats.size
 

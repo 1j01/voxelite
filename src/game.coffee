@@ -1,33 +1,28 @@
 
-
-# cube = new THREE.Mesh(
-# 	new THREE.CubeGeometry(100, 100, 100)
-# 	new THREE.MeshBasicMaterial(color: 0xff00ff)
-# )
-# scene.add cube
-# console.log scene
-
-# v = new Voxel {x: 0, y: 0, z: 0}
-# scene.add v
-
 @world = new World
 
-# for x in [-10..10]
-# 	for z in [-10..10]
-# 		for y in [0..Math.random()*5]
-# 			@world.set {x, y, z}, yes
+# r = 10
 
-# for x in [-10..10]
-# 	for z in [-10..10]
+# for x in [-r..r]
+# 	for z in [-r..r]
+# 		for y in [0..Math.random()*5]
+# 			@world.set {x, y, z},
+# 				~~(Math.random()*255)*255*255
+
+# for x in [-r..r]
+# 	for z in [-r..r]
 # 		for y in [0..Math.random()*x*z/5]
-# 			@world.set {x, y, z}, yes
+# 			@world.set {x, y, z},
+# 				(x/r*255)**1 +
+# 				(y/r*255)**2 +
+# 				(z/r*255)**3
 
 # palette = (v for k, v of THREE.ColorKeywords when Math.random() < 0.1)
 # palette = (v for k, v of THREE.ColorKeywords when k.match /en/) # green
 # palette = (v for k, v of THREE.ColorKeywords when k.match /ne/) # ice
 # palette = (v for k, v of THREE.ColorKeywords when k.match /se/)
 # palette = (v for k, v of THREE.ColorKeywords when k.match /ra/)
-palette = (v for k, v of THREE.ColorKeywords when k.match /oi/)
+# palette = (v for k, v of THREE.ColorKeywords when k.match /oi/)
 
 r = 40
 ir = r-4
@@ -41,21 +36,16 @@ for x in [-r..r]
 					# 0xffffff * (~~(Math.random()*15))/15
 					# palette[~~(Math.random()*palette.length)]
 					# x*y*z*z
-					# (x/r*255)**1 +
-					# (y/r*255)**2 +
-					# (z/r*255)**3
-					# (x/r)*(255**1) +
-					# (y/r)*(255**2) +
-					# (z/r)*(255**3)
-					(x/r/2*255)**1 +
-					(y/r/2*255)**2 +
-					(z/r/2*255)**3
+					(x/r*255)**1 +
+					(y/r*255)**2 +
+					(z/r*255)**3
 				else
 					0
 
 
 # world.add @player = new Player
 # world.carve 0, 0, 0
+
 
 
 
