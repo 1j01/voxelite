@@ -124,9 +124,7 @@ for x in [-gr..gr] by Chunk.SIZE
 	for y in [-gr..gr] by Chunk.SIZE
 		for z in [-gr..gr] by Chunk.SIZE
 			do (x, y, z)->
-				# setTimeout ->
-					world.get {x, y, z}
-				# , Math.random() * 5000
+				world.get {x, y, z}
 
 do animate = ->
 	world.update()
@@ -134,7 +132,7 @@ do animate = ->
 	renderer.render scene, camera
 	requestAnimationFrame animate
 
+scene.debug = off
 window.onkeydown = (e)->
-	# console.log e.keyCode
 	if e.keyCode is 113 # F2
 		scene.debug = not scene.debug
