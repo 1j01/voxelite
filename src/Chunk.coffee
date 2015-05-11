@@ -1,7 +1,7 @@
 
 @chunks = []
 
-SZ = 50
+SZ = 150
 
 class ChunkGeometry extends T.Geometry
 	constructor: ()->
@@ -55,8 +55,8 @@ class ChunkGeometry extends T.Geometry
 		
 		for i in [0..SZ]
 			buildPlane 'x', 'y', i, 0
-			# buildPlane 'z', 'y', i, 0
-			# buildPlane 'z', 'x', i, 0
+			buildPlane 'z', 'y', i, 0
+			buildPlane 'z', 'x', i, 0
 
 class @Chunk extends T.Object3D
 	@SIZE: SZ # in your face, binary
@@ -71,24 +71,33 @@ class @Chunk extends T.Object3D
 		canvas = document.createElement "canvas"
 		canvas.width = canvas.height = SZ
 		tex = new T.Texture canvas
+		tex.minFilter = T.NearestFilter
+		tex.magFilter = T.NearestFilter
 		mat = new T.MeshBasicMaterial map: tex, side: T.DoubleSide
+		# mat = new T.MeshNormalMaterial #side: T.DoubleSide
 		mat.transparent = yes
+		mat.depthTest = no
+		mat.depthWrite = no
 		
 		ctx = canvas.getContext "2d"
 		ctx.fillStyle = "blue"
 		ctx.beginPath()
-		ctx.arc SZ/2, SZ/2, SZ/2, 0, Math.PI * 2, no
+		ctx.arc SZ/2, SZ/2, SZ/3, 0, Math.PI * 2, no
+		# ctx.arc SZ/2, SZ/2, SZ/2, 0, Math.PI * 2, no
 		# ctx.arc SZ/2, SZ/2, SZ/2 * Math.sin(i/SZ), 0, Math.PI * 2, no
 		ctx.fill()
 		ctx.fillStyle = "aqua"
 		ctx.beginPath()
-		ctx.arc SZ/2, SZ/2, SZ/2-0.01, 0, Math.PI * 2, no
+		# ctx.arc SZ/2, SZ/2, SZ/2-0.01, 0, Math.PI * 2, no
+		ctx.arc SZ/2, SZ/2, SZ/3-0.2, 0, Math.PI * 2, no
 		ctx.fill()
 		tex.needsUpdate = yes
 		
 		geom = new ChunkGeometry
 		mesh = new T.Mesh geom, mat
 		@add mesh
+		# @frustumCulled = no
+		# @doubleSided = yes
 		
 		debug_container = new T.Object3D
 		debug_mesh = new T.Mesh new T.BoxGeometry SZ, SZ, SZ

@@ -126,9 +126,18 @@ for x in [-gr..gr] by Chunk.SIZE
 			do (x, y, z)->
 				world.get {x, y, z}
 
+stats = new Stats
+
+stats.domElement.style.position = "absolute"
+stats.domElement.style.left = "0px"
+stats.domElement.style.top = "0px"
+
+document.body.appendChild stats.domElement
+
 do animate = ->
 	world.update()
 	controls.update()
+	stats.update()
 	renderer.render scene, camera
 	requestAnimationFrame animate
 
