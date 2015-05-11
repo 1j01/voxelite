@@ -12,6 +12,7 @@ FAR = 20000
 @camera = new T.PerspectiveCamera(FOV, ASPECT, NEAR, FAR)
 scene.add(camera)
 camera.position.set(15, 55, 40)
+camera.position.set(150, 550, 40)
 camera.lookAt(scene.position)
 
 # RENDERER

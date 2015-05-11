@@ -124,9 +124,9 @@ for x in [-gr..gr] by Chunk.SIZE
 	for y in [-gr..gr] by Chunk.SIZE
 		for z in [-gr..gr] by Chunk.SIZE
 			do (x, y, z)->
-				setTimeout ->
+				# setTimeout ->
 					world.get {x, y, z}
-				, Math.random() * 5000
+				# , Math.random() * 5000
 
 do animate = ->
 	world.update()
