@@ -76,10 +76,18 @@ class @Chunk extends T.Object3D
 		mat = new T.MeshBasicMaterial map: tex, side: T.DoubleSide
 		# mat = new T.MeshNormalMaterial #side: T.DoubleSide
 		mat.transparent = yes
-		mat.depthTest = no
-		mat.depthWrite = no
+		# mat.depthTest = no
+		# mat.depthWrite = no
+		mat.alphaTest = 0.5
 		
 		ctx = canvas.getContext "2d"
+		
+		ctx.fillStyle = "#005"
+		# ctx.fillRect(0, SZ/4, SZ, SZ/2)
+		# ctx.fillRect(SZ/4, 0, SZ/2, SZ)
+		# ctx.fillRect(0, SZ/4, SZ, Math.sin(x)*SZ/2)
+		# ctx.fillRect(SZ/4, 0, Math.sin(y)*SZ/2, SZ)
+		
 		ctx.fillStyle = "blue"
 		ctx.beginPath()
 		ctx.arc SZ/2, SZ/2, SZ/3, 0, Math.PI * 2, no
