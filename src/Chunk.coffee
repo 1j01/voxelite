@@ -11,7 +11,7 @@ createChunkGeometry = ->
 	# normals = []
 	# colors = []
 	
-	triangles = 500000
+	triangles = SZ * 2 * 3 * 2
 	geometry = new THREE.BufferGeometry()
 	# indices = new Uint32Array( triangles * 3 )
 	# for i in [0..indices.length]
@@ -19,9 +19,11 @@ createChunkGeometry = ->
 	positions = new Float32Array( triangles * 3 * 3 )
 	normals = new Int16Array( triangles * 3 * 3 )
 	colors = new Uint8Array( triangles * 3 * 3 )
+	uvs = new Uint8Array( triangles * 3 * 2 )
 	
 	positions_index = 0
 	normals_index = 0
+	uvs_index = 0
 	
 	buildPlane = (u, v, z, materialIndex)=>
 		
@@ -76,6 +78,26 @@ createChunkGeometry = ->
 		positions[positions_index++] = vertices[ 3 ].x
 		positions[positions_index++] = vertices[ 3 ].y
 		positions[positions_index++] = vertices[ 3 ].z
+		
+		uvs[uvs_index++] = vertices[ 0 ].x
+		uvs[uvs_index++] = vertices[ 0 ].y
+		uvs[uvs_index++] = vertices[ 0 ].z
+		uvs[uvs_index++] = vertices[ 1 ].x
+		uvs[uvs_index++] = vertices[ 1 ].y
+		uvs[uvs_index++] = vertices[ 1 ].z
+		uvs[uvs_index++] = vertices[ 3 ].x
+		uvs[uvs_index++] = vertices[ 3 ].y
+		uvs[uvs_index++] = vertices[ 3 ].z
+		
+		uvs[uvs_index++] = vertices[ 1 ].x
+		uvs[uvs_index++] = vertices[ 1 ].y
+		uvs[uvs_index++] = vertices[ 1 ].z
+		uvs[uvs_index++] = vertices[ 2 ].x
+		uvs[uvs_index++] = vertices[ 2 ].y
+		uvs[uvs_index++] = vertices[ 2 ].z
+		uvs[uvs_index++] = vertices[ 3 ].x
+		uvs[uvs_index++] = vertices[ 3 ].y
+		uvs[uvs_index++] = vertices[ 3 ].z
 		
 		for [0..6]
 			normals[normals_index++] = normal.x
@@ -179,6 +201,9 @@ createChunkGeometry = ->
 		vx = ( x / n ) + 0.5
 		vy = ( y / n ) + 0.5
 		vz = ( z / n ) + 0.5
+		# vx = (positions[ i ] / n * 5) #+ 0.5
+		# vy = (positions[ i+1 ] / n * 5) #+ 0.5
+		# vz = (positions[ i+2 ] / n * 5) #+ 0.5
 		color.setRGB( vx, vy, vz )
 		colors[ i ]     = color.r * 255
 		colors[ i + 1 ] = color.g * 255
@@ -194,6 +219,7 @@ createChunkGeometry = ->
 	geometry.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) )
 	geometry.addAttribute( 'normal', new THREE.BufferAttribute( normals, 3, true ) )
 	geometry.addAttribute( 'color', new THREE.BufferAttribute( colors, 3, true ) )
+	geometry.addAttribute( 'uv', new THREE.BufferAttribute( uvs, 2, true ) )
 	geometry.computeBoundingSphere()
 
 	return geometry
@@ -213,8 +239,8 @@ class @Chunk extends T.Object3D
 		tex = new T.Texture canvas
 		tex.minFilter = T.NearestFilter
 		tex.magFilter = T.NearestFilter
-		# mat = new T.MeshBasicMaterial map: tex, side: T.DoubleSide
-		mat = new T.MeshBasicMaterial side: T.DoubleSide, vertexColors: THREE.VertexColors
+		mat = new T.MeshBasicMaterial map: tex, side: T.DoubleSide
+		# mat = new T.MeshBasicMaterial side: T.DoubleSide, vertexColors: THREE.VertexColors
 		# mat = new T.MeshNormalMaterial #side: T.DoubleSide
 		# mat.transparent = yes
 		# mat.alphaTest = 0.5
