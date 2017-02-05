@@ -57,6 +57,144 @@ class ChunkGeometry extends T.Geometry
 			buildPlane 'x', 'y', i, 0
 			buildPlane 'z', 'y', i, 0
 			buildPlane 'z', 'x', i, 0
+		
+		
+		bufferGeometry = new THREE.BufferGeometry()
+
+		positions = []
+		normals = []
+		colors = []
+
+		# geometry = @#createGeometry()
+		# 
+		# color = new THREE.Color 0xffffff
+		# color.setHSL (i / count), 1.0, 0.7
+		# 
+		# geometry.faces.forEach ( face, index )->
+		# 
+		# 	positions.push geometry.vertices[ face.a ].x
+		# 	positions.push geometry.vertices[ face.a ].y
+		# 	positions.push geometry.vertices[ face.a ].z
+		# 	positions.push geometry.vertices[ face.b ].x
+		# 	positions.push geometry.vertices[ face.b ].y
+		# 	positions.push geometry.vertices[ face.b ].z
+		# 	positions.push geometry.vertices[ face.c ].x
+		# 	positions.push geometry.vertices[ face.c ].y
+		# 	positions.push geometry.vertices[ face.c ].z
+		# 
+		# 	normals.push face.normal.x
+		# 	normals.push face.normal.y
+		# 	normals.push face.normal.z
+		# 	normals.push face.normal.x
+		# 	normals.push face.normal.y
+		# 	normals.push face.normal.z
+		# 	normals.push face.normal.x
+		# 	normals.push face.normal.y
+		# 	normals.push face.normal.z
+		# 
+		# 	colors.push color.r
+		# 	colors.push color.g
+		# 	colors.push color.b
+		# 	colors.push color.r
+		# 	colors.push color.g
+		# 	colors.push color.b
+		# 	colors.push color.r
+		# 	colors.push color.g
+		# 	colors.push color.b
+		# 
+		# bufferGeometry.addAttribute 'position', new THREE.Float32BufferAttribute(positions, 3)
+		# bufferGeometry.addAttribute 'normal', new THREE.Float32BufferAttribute(normals, 3)
+		# bufferGeometry.addAttribute 'color', new THREE.Float32BufferAttribute(colors, 3)
+
+		
+		triangles = 500000
+		geometry = new THREE.BufferGeometry()
+		indices = new Uint32Array( triangles * 3 )
+		for i in [0..indices.length]
+			indices[ i ] = i
+		positions = new Float32Array( triangles * 3 * 3 )
+		normals = new Int16Array( triangles * 3 * 3 )
+		colors = new Uint8Array( triangles * 3 * 3 )
+		color = new THREE.Color()
+		n = 800; n2 = n/2 # triangles spread in the cube
+		d = 12; d2 = d/2 # individual triangle size
+		pA = new THREE.Vector3()
+		pB = new THREE.Vector3()
+		pC = new THREE.Vector3()
+		cb = new THREE.Vector3()
+		ab = new THREE.Vector3()
+		for i in [0..positions.length] by 9
+			# positions
+			x = Math.random() * n - n2
+			y = Math.random() * n - n2
+			z = Math.random() * n - n2
+			ax = x + Math.random() * d - d2
+			ay = y + Math.random() * d - d2
+			az = z + Math.random() * d - d2
+			bx = x + Math.random() * d - d2
+			b_y = y + Math.random() * d - d2
+			bz = z + Math.random() * d - d2
+			cx = x + Math.random() * d - d2
+			cy = y + Math.random() * d - d2
+			cz = z + Math.random() * d - d2
+			positions[ i ]     = ax
+			positions[ i + 1 ] = ay
+			positions[ i + 2 ] = az
+			positions[ i + 3 ] = bx
+			positions[ i + 4 ] = b_y
+			positions[ i + 5 ] = bz
+			positions[ i + 6 ] = cx
+			positions[ i + 7 ] = cy
+			positions[ i + 8 ] = cz
+			# flat face normals
+			pA.set( ax, ay, az )
+			pB.set( bx, b_y, bz )
+			pC.set( cx, cy, cz )
+			cb.subVectors( pC, pB )
+			ab.subVectors( pA, pB )
+			cb.cross( ab )
+			cb.normalize()
+			nx = cb.x
+			ny = cb.y
+			nz = cb.z
+			normals[ i ]     = nx * 32767
+			normals[ i + 1 ] = ny * 32767
+			normals[ i + 2 ] = nz * 32767
+			normals[ i + 3 ] = nx * 32767
+			normals[ i + 4 ] = ny * 32767
+			normals[ i + 5 ] = nz * 32767
+			normals[ i + 6 ] = nx * 32767
+			normals[ i + 7 ] = ny * 32767
+			normals[ i + 8 ] = nz * 32767
+			# colors
+			vx = ( x / n ) + 0.5
+			vy = ( y / n ) + 0.5
+			vz = ( z / n ) + 0.5
+			color.setRGB( vx, vy, vz )
+			colors[ i ]     = color.r * 255
+			colors[ i + 1 ] = color.g * 255
+			colors[ i + 2 ] = color.b * 255
+			colors[ i + 3 ] = color.r * 255
+			colors[ i + 4 ] = color.g * 255
+			colors[ i + 5 ] = color.b * 255
+			colors[ i + 6 ] = color.r * 255
+			colors[ i + 7 ] = color.g * 255
+			colors[ i + 8 ] = color.b * 255
+		
+		geometry.setIndex( new THREE.BufferAttribute( indices, 1 ) )
+		geometry.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) )
+		geometry.addAttribute( 'normal', new THREE.BufferAttribute( normals, 3, true ) )
+		geometry.addAttribute( 'color', new THREE.BufferAttribute( colors, 3, true ) )
+		geometry.computeBoundingSphere()
+
+		# material = new THREE.MeshPhongMaterial
+		# 	shininess: 80,
+		# 	vertexColors: THREE.VertexColors
+
+		# mesh = new THREE.Mesh bufferGeometry, material
+		# scene.add mesh
+		# return bufferGeometry
+		return geometry
 
 class @Chunk extends T.Object3D
 	@SIZE: SZ # in your face, binary
@@ -73,12 +211,11 @@ class @Chunk extends T.Object3D
 		tex = new T.Texture canvas
 		tex.minFilter = T.NearestFilter
 		tex.magFilter = T.NearestFilter
-		mat = new T.MeshBasicMaterial map: tex, side: T.DoubleSide
+		# mat = new T.MeshBasicMaterial map: tex, side: T.DoubleSide
+		mat = new T.MeshBasicMaterial side: T.DoubleSide, vertexColors: THREE.VertexColors
 		# mat = new T.MeshNormalMaterial #side: T.DoubleSide
-		mat.transparent = yes
-		# mat.depthTest = no
-		# mat.depthWrite = no
-		mat.alphaTest = 0.5
+		# mat.transparent = yes
+		# mat.alphaTest = 0.5
 		
 		ctx = canvas.getContext "2d"
 		
