@@ -11,8 +11,9 @@ NEAR = 0.1
 FAR = 20000
 @camera = new T.PerspectiveCamera(FOV, ASPECT, NEAR, FAR)
 scene.add(camera)
-camera.position.set(40, 40, 40)
-camera.lookAt(scene.position)
+camera.position.set(400, 400, 400)
+# camera.lookAt(scene.position)
+# camera.lookAt(new V3(Chunk.SIZE/2, Chunk.SIZE/2, Chunk.SIZE/2))
 
 # RENDERER
 @renderer = 
@@ -37,6 +38,7 @@ window.onresize = ->
 
 # CONTROLS
 @controls = new T.OrbitControls(camera, renderer.domElement)
+controls.center.set(Chunk.SIZE/2, Chunk.SIZE/2, Chunk.SIZE/2)
 
 # LIGHTING
 # light = new T.PointLight(0xffffff, 1, 10000)
