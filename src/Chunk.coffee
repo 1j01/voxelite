@@ -5,14 +5,8 @@ SZ = 150
 
 createChunkGeometry = ->
 	
-	# bufferGeometry = new THREE.BufferGeometry()
-
-	# positions = []
-	# normals = []
-	# colors = []
-	
-	triangles = SZ * 2 * 3 * 2
-	geometry = new THREE.BufferGeometry()
+	triangles = SZ * 4 * 3
+	geometry = new T.BufferGeometry()
 	# indices = new Uint32Array( triangles * 3 )
 	# for i in [0..indices.length]
 	# 	indices[ i ] = i
@@ -24,6 +18,7 @@ createChunkGeometry = ->
 	positions_index = 0
 	normals_index = 0
 	uvs_index = 0
+	colors_index = 0
 	
 	buildPlane = (u, v, z, materialIndex)=>
 		
@@ -44,97 +39,67 @@ createChunkGeometry = ->
 				vector[w] = z
 				vertices.push vector
 		
-		# a = 0 + vertices_offset
-		# b = 2 + vertices_offset
-		# c = 3 + vertices_offset
-		# d = 1 + vertices_offset
+		# positions[positions_index++] = vertices[ 0 ].x
+		# positions[positions_index++] = vertices[ 0 ].y
+		# positions[positions_index++] = vertices[ 0 ].z
+		# positions[positions_index++] = vertices[ 1 ].x
+		# positions[positions_index++] = vertices[ 1 ].y
+		# positions[positions_index++] = vertices[ 1 ].z
+		# positions[positions_index++] = vertices[ 3 ].x
+		# positions[positions_index++] = vertices[ 3 ].y
+		# positions[positions_index++] = vertices[ 3 ].z
+		# 
+		# positions[positions_index++] = vertices[ 1 ].x
+		# positions[positions_index++] = vertices[ 1 ].y
+		# positions[positions_index++] = vertices[ 1 ].z
+		# positions[positions_index++] = vertices[ 2 ].x
+		# positions[positions_index++] = vertices[ 2 ].y
+		# positions[positions_index++] = vertices[ 2 ].z
+		# positions[positions_index++] = vertices[ 3 ].x
+		# positions[positions_index++] = vertices[ 3 ].y
+		# positions[positions_index++] = vertices[ 3 ].z
 		
-		# positions[i + 0] vertices[ 0 ].x
-		# positions[i + 1] vertices[ 0 ].y
-		# positions[i + 2] vertices[ 0 ].z
-		# positions[i + 3] vertices[ 1 ].x
-		# positions[i + 4] vertices[ 1 ].y
-		# positions[i + 5] vertices[ 1 ].z
-		# positions[i + 6] vertices[ 2 ].x
-		# positions[i + 7] vertices[ 2 ].y
-		# positions[i + 8] vertices[ 2 ].z
+		color = new T.Color "#f0f0f0"
+		# color.setHSL(Math.random() * 360, z, z)
+		color.setHSL(z / SZ, z, z / SZ)
 		
-		positions[positions_index++] = vertices[ 0 ].x
-		positions[positions_index++] = vertices[ 0 ].y
-		positions[positions_index++] = vertices[ 0 ].z
-		positions[positions_index++] = vertices[ 1 ].x
-		positions[positions_index++] = vertices[ 1 ].y
-		positions[positions_index++] = vertices[ 1 ].z
-		positions[positions_index++] = vertices[ 3 ].x
-		positions[positions_index++] = vertices[ 3 ].y
-		positions[positions_index++] = vertices[ 3 ].z
+		for vertices_index in [0, 1, 3, 1, 2, 3]
+			positions[positions_index++] = vertices[vertices_index].x
+			positions[positions_index++] = vertices[vertices_index].y
+			positions[positions_index++] = vertices[vertices_index].z
+			
+			colors[colors_index++] = color.r * 255
+			colors[colors_index++] = color.g * 255
+			colors[colors_index++] = color.b * 255
 		
-		positions[positions_index++] = vertices[ 1 ].x
-		positions[positions_index++] = vertices[ 1 ].y
-		positions[positions_index++] = vertices[ 1 ].z
-		positions[positions_index++] = vertices[ 2 ].x
-		positions[positions_index++] = vertices[ 2 ].y
-		positions[positions_index++] = vertices[ 2 ].z
-		positions[positions_index++] = vertices[ 3 ].x
-		positions[positions_index++] = vertices[ 3 ].y
-		positions[positions_index++] = vertices[ 3 ].z
+		# uvs[uvs_index++] = 0
+		# uvs[uvs_index++] = 0
+		# 
+		# uvs[uvs_index++] = 0
+		# uvs[uvs_index++] = SZ
+		# 
+		# uvs[uvs_index++] = SZ
+		# uvs[uvs_index++] = 0
+		# 
+		# uvs[uvs_index++] = 0
+		# uvs[uvs_index++] = SZ
+		# 
+		# uvs[uvs_index++] = SZ
+		# uvs[uvs_index++] = SZ
+		# 
+		# uvs[uvs_index++] = SZ
+		# uvs[uvs_index++] = 0
 		
-		uvs[uvs_index++] = vertices[ 0 ].x
-		uvs[uvs_index++] = vertices[ 0 ].y
-		uvs[uvs_index++] = vertices[ 0 ].z
-		uvs[uvs_index++] = vertices[ 1 ].x
-		uvs[uvs_index++] = vertices[ 1 ].y
-		uvs[uvs_index++] = vertices[ 1 ].z
-		uvs[uvs_index++] = vertices[ 3 ].x
-		uvs[uvs_index++] = vertices[ 3 ].y
-		uvs[uvs_index++] = vertices[ 3 ].z
-		
-		uvs[uvs_index++] = vertices[ 1 ].x
-		uvs[uvs_index++] = vertices[ 1 ].y
-		uvs[uvs_index++] = vertices[ 1 ].z
-		uvs[uvs_index++] = vertices[ 2 ].x
-		uvs[uvs_index++] = vertices[ 2 ].y
-		uvs[uvs_index++] = vertices[ 2 ].z
-		uvs[uvs_index++] = vertices[ 3 ].x
-		uvs[uvs_index++] = vertices[ 3 ].y
-		uvs[uvs_index++] = vertices[ 3 ].z
+		for uv_edge in [
+			0, 0,  0, 1,  1, 0
+			0, 1,  1, 1,  1, 0
+		]
+			uvs[uvs_index++] = uv_edge * SZ
 		
 		for [0..6]
 			normals[normals_index++] = normal.x
 			normals[normals_index++] = normal.y
 			normals[normals_index++] = normal.z
-		
-		# normals.push normal.x
-		# normals.push normal.y
-		# normals.push normal.z
-		# normals.push normal.x
-		# normals.push normal.y
-		# normals.push normal.z
-		# normals.push normal.x
-		# normals.push normal.y
-		# normals.push normal.z
-		
-		uva = new T.Vector2 0, 0
-		uvb = new T.Vector2 0, 1
-		uvc = new T.Vector2 1, 1
-		uvd = new T.Vector2 1, 0
-		
-		# 
-		# face = new T.Face3 a, b, d
-		# face.normal.copy normal
-		# face.vertexNormals.push normal.clone(), normal.clone(), normal.clone()
-		# face.materialIndex = materialIndex
-		# 
-		# @faces.push face
-		# @faceVertexUvs[0].push [uva, uvb, uvd]
-		# 
-		# face = new T.Face3 b, c, d
-		# face.normal.copy normal
-		# face.vertexNormals.push normal.clone(), normal.clone(), normal.clone()
-		# face.materialIndex = materialIndex
-		# 
-		# @faces.push face
-		# @faceVertexUvs[0].push [uvb.clone(), uvc, uvd.clone()]
 		
 	for i in [0..SZ]
 		buildPlane 'x', 'y', i, 0
@@ -142,84 +107,35 @@ createChunkGeometry = ->
 		buildPlane 'z', 'x', i, 0
 	
 	# 
-	# bufferGeometry.addAttribute 'position', new THREE.Float32BufferAttribute(positions, 3)
-	# bufferGeometry.addAttribute 'normal', new THREE.Float32BufferAttribute(normals, 3)
-	# bufferGeometry.addAttribute 'color', new THREE.Float32BufferAttribute(colors, 3)
+	# bufferGeometry.addAttribute 'position', new T.Float32BufferAttribute(positions, 3)
+	# bufferGeometry.addAttribute 'normal', new T.Float32BufferAttribute(normals, 3)
+	# bufferGeometry.addAttribute 'color', new T.Float32BufferAttribute(colors, 3)
 	
-	color = new THREE.Color()
-	n = 800; n2 = n/2 # triangles spread in the cube
-	# d = 12; d2 = d/2 # individual triangle size
-	# pA = new THREE.Vector3()
-	# pB = new THREE.Vector3()
-	# pC = new THREE.Vector3()
-	# cb = new THREE.Vector3()
-	# ab = new THREE.Vector3()
-	for i in [0..positions.length] by 9
-		# positions
-		x = Math.random() * n - n2
-		y = Math.random() * n - n2
-		z = Math.random() * n - n2
-		# ax = x + Math.random() * d - d2
-		# ay = y + Math.random() * d - d2
-		# az = z + Math.random() * d - d2
-		# bx = x + Math.random() * d - d2
-		# b_y = y + Math.random() * d - d2
-		# bz = z + Math.random() * d - d2
-		# cx = x + Math.random() * d - d2
-		# cy = y + Math.random() * d - d2
-		# cz = z + Math.random() * d - d2
-		# positions[ i ]     = ax
-		# positions[ i + 1 ] = ay
-		# positions[ i + 2 ] = az
-		# positions[ i + 3 ] = bx
-		# positions[ i + 4 ] = b_y
-		# positions[ i + 5 ] = bz
-		# positions[ i + 6 ] = cx
-		# positions[ i + 7 ] = cy
-		# positions[ i + 8 ] = cz
-		# flat face normals
-		# pA.set( ax, ay, az )
-		# pB.set( bx, b_y, bz )
-		# pC.set( cx, cy, cz )
-		# cb.subVectors( pC, pB )
-		# ab.subVectors( pA, pB )
-		# cb.cross( ab )
-		# cb.normalize()
-		# nx = cb.x
-		# ny = cb.y
-		# nz = cb.z
-		# normals[ i ]     = nx * 32767
-		# normals[ i + 1 ] = ny * 32767
-		# normals[ i + 2 ] = nz * 32767
-		# normals[ i + 3 ] = nx * 32767
-		# normals[ i + 4 ] = ny * 32767
-		# normals[ i + 5 ] = nz * 32767
-		# normals[ i + 6 ] = nx * 32767
-		# normals[ i + 7 ] = ny * 32767
-		# normals[ i + 8 ] = nz * 32767
-		# colors
-		vx = ( x / n ) + 0.5
-		vy = ( y / n ) + 0.5
-		vz = ( z / n ) + 0.5
-		# vx = (positions[ i ] / n * 5) #+ 0.5
-		# vy = (positions[ i+1 ] / n * 5) #+ 0.5
-		# vz = (positions[ i+2 ] / n * 5) #+ 0.5
-		color.setRGB( vx, vy, vz )
-		colors[ i ]     = color.r * 255
-		colors[ i + 1 ] = color.g * 255
-		colors[ i + 2 ] = color.b * 255
-		colors[ i + 3 ] = color.r * 255
-		colors[ i + 4 ] = color.g * 255
-		colors[ i + 5 ] = color.b * 255
-		colors[ i + 6 ] = color.r * 255
-		colors[ i + 7 ] = color.g * 255
-		colors[ i + 8 ] = color.b * 255
+	# color = new T.Color()
+	# for i in [0..positions.length] by 9
+	# 	# colors
+	# 	vx = Math.random()
+	# 	vy = Math.random()
+	# 	vz = Math.random()
+	# 	# vx = (positions[ i ] / n * 5) #+ 0.5
+	# 	# vy = (positions[ i+1 ] / n * 5) #+ 0.5
+	# 	# vz = (positions[ i+2 ] / n * 5) #+ 0.5
+	# 	color.setRGB( vx, vy, vz )
+	# 	colors[ i ]     = color.r * 255
+	# 	colors[ i + 1 ] = color.g * 255
+	# 	colors[ i + 2 ] = color.b * 255
+	# 	colors[ i + 3 ] = color.r * 255
+	# 	colors[ i + 4 ] = color.g * 255
+	# 	colors[ i + 5 ] = color.b * 255
+	# 	colors[ i + 6 ] = color.r * 255
+	# 	colors[ i + 7 ] = color.g * 255
+	# 	colors[ i + 8 ] = color.b * 255
 	
-	# geometry.setIndex( new THREE.BufferAttribute( indices, 1 ) )
-	geometry.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) )
-	geometry.addAttribute( 'normal', new THREE.BufferAttribute( normals, 3, true ) )
-	geometry.addAttribute( 'color', new THREE.BufferAttribute( colors, 3, true ) )
-	geometry.addAttribute( 'uv', new THREE.BufferAttribute( uvs, 2, true ) )
+	# geometry.setIndex( new T.BufferAttribute( indices, 1 ) )
+	geometry.addAttribute( 'position', new T.BufferAttribute( positions, 3 ) )
+	geometry.addAttribute( 'normal', new T.BufferAttribute( normals, 3, true ) )
+	geometry.addAttribute( 'color', new T.BufferAttribute( colors, 3, true ) )
+	geometry.addAttribute( 'uv', new T.BufferAttribute( uvs, 2, true ) )
 	geometry.computeBoundingSphere()
 
 	return geometry
@@ -239,11 +155,12 @@ class @Chunk extends T.Object3D
 		tex = new T.Texture canvas
 		tex.minFilter = T.NearestFilter
 		tex.magFilter = T.NearestFilter
-		mat = new T.MeshBasicMaterial map: tex, side: T.DoubleSide
-		# mat = new T.MeshBasicMaterial side: T.DoubleSide, vertexColors: THREE.VertexColors
+		mat = new T.MeshBasicMaterial map: tex, side: T.DoubleSide, vertexColors: T.VertexColors
+		mat = new T.MeshBasicMaterial wireframe: yes, vertexColors: T.VertexColors
+		# mat = new T.MeshBasicMaterial side: T.DoubleSide, vertexColors: T.VertexColors
 		# mat = new T.MeshNormalMaterial #side: T.DoubleSide
-		# mat.transparent = yes
-		# mat.alphaTest = 0.5
+		mat.transparent = yes
+		mat.alphaTest = 0.5
 		
 		ctx = canvas.getContext "2d"
 		
