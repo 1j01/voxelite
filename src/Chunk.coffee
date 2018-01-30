@@ -5,6 +5,7 @@ SZ = 150
 
 createChunkGeometry = ->
 	
+	# triangles = SZ * 4 * 3
 	triangles = SZ * 4 * 3
 	geometry = new T.BufferGeometry()
 	# indices = new Uint32Array( triangles * 3 )
@@ -59,9 +60,14 @@ createChunkGeometry = ->
 		# positions[positions_index++] = vertices[ 3 ].y
 		# positions[positions_index++] = vertices[ 3 ].z
 		
-		color = new T.Color "#f0f0f0"
-		# color.setHSL(Math.random() * 360, z, z)
-		color.setHSL(z / SZ, z, z / SZ)
+		color = new T.Color
+		# color.setHSL(Math.random(), z/SZ, z/SZ)
+		# color.setHSL(z / SZ, z, z / SZ)
+		# color.setHSL(z / SZ, z, 0.7)
+		# color.setHSL(((u.charCodeAt(0) + v.charCodeAt(0))%6)/36, z, z / SZ)
+		# color.setHSL(((u.charCodeAt(0) + v.charCodeAt(0))%5)/5, z, z / SZ)
+		# color.setHSL(((u.charCodeAt(0)/1.2 + v.charCodeAt(0)*2.5)%5)/5, z, z / SZ)
+		color.setHSL(((u.charCodeAt(0)*53.6 + v.charCodeAt(0)*2.5)%5)/5, 1, z / SZ)
 		
 		for vertices_index in [0, 1, 3, 1, 2, 3]
 			positions[positions_index++] = vertices[vertices_index].x
@@ -72,29 +78,11 @@ createChunkGeometry = ->
 			colors[colors_index++] = color.g * 255
 			colors[colors_index++] = color.b * 255
 		
-		# uvs[uvs_index++] = 0
-		# uvs[uvs_index++] = 0
-		# 
-		# uvs[uvs_index++] = 0
-		# uvs[uvs_index++] = SZ
-		# 
-		# uvs[uvs_index++] = SZ
-		# uvs[uvs_index++] = 0
-		# 
-		# uvs[uvs_index++] = 0
-		# uvs[uvs_index++] = SZ
-		# 
-		# uvs[uvs_index++] = SZ
-		# uvs[uvs_index++] = SZ
-		# 
-		# uvs[uvs_index++] = SZ
-		# uvs[uvs_index++] = 0
-		
 		for uv_edge in [
 			0, 0,  0, 1,  1, 0
 			0, 1,  1, 1,  1, 0
 		]
-			uvs[uvs_index++] = uv_edge * SZ
+			uvs[uvs_index++] = uv_edge #* SZ
 		
 		for [0..6]
 			normals[normals_index++] = normal.x
@@ -135,7 +123,7 @@ createChunkGeometry = ->
 	geometry.addAttribute( 'position', new T.BufferAttribute( positions, 3 ) )
 	geometry.addAttribute( 'normal', new T.BufferAttribute( normals, 3, true ) )
 	geometry.addAttribute( 'color', new T.BufferAttribute( colors, 3, true ) )
-	geometry.addAttribute( 'uv', new T.BufferAttribute( uvs, 2, true ) )
+	geometry.addAttribute( 'uv', new T.BufferAttribute( uvs, 2 ) )
 	geometry.computeBoundingSphere()
 
 	return geometry
@@ -156,17 +144,22 @@ class @Chunk extends T.Object3D
 		tex.minFilter = T.NearestFilter
 		tex.magFilter = T.NearestFilter
 		mat = new T.MeshBasicMaterial map: tex, side: T.DoubleSide, vertexColors: T.VertexColors
-		mat = new T.MeshBasicMaterial wireframe: yes, vertexColors: T.VertexColors
+		# mat = new T.MeshBasicMaterial wireframe: yes, map: tex, side: T.DoubleSide, vertexColors: T.VertexColors
+		# mat = new T.MeshBasicMaterial wireframe: yes, vertexColors: T.VertexColors
+		# mat = new T.MeshBasicMaterial opacity: 0.8, vertexColors: T.VertexColors
+		# mat = new T.MeshBasicMaterial map: tex, side: T.DoubleSide, opacity: 0.8, vertexColors: T.VertexColors
+		# mat = new T.MeshBasicMaterial map: tex, side: T.DoubleSide, opacity: 0.8, vertexColors: T.VertexColors
 		# mat = new T.MeshBasicMaterial side: T.DoubleSide, vertexColors: T.VertexColors
 		# mat = new T.MeshNormalMaterial #side: T.DoubleSide
 		mat.transparent = yes
 		mat.alphaTest = 0.5
 		
 		ctx = canvas.getContext "2d"
+		# document.body.appendChild canvas
 		
-		ctx.fillStyle = "#005"
-		# ctx.fillRect(0, SZ/4, SZ, SZ/2)
-		# ctx.fillRect(SZ/4, 0, SZ/2, SZ)
+		ctx.fillStyle = "rgba(0, 0, 0, 0.5)"
+		ctx.fillRect(0, SZ/4, SZ, SZ/2)
+		ctx.fillRect(SZ/4, 0, SZ/2, SZ)
 		# ctx.fillRect(0, SZ/4, SZ, Math.sin(x)*SZ/2)
 		# ctx.fillRect(SZ/4, 0, Math.sin(y)*SZ/2, SZ)
 		
@@ -176,7 +169,7 @@ class @Chunk extends T.Object3D
 		# ctx.arc SZ/2, SZ/2, SZ/2, 0, Math.PI * 2, no
 		# ctx.arc SZ/2, SZ/2, SZ/2 * Math.sin(i/SZ), 0, Math.PI * 2, no
 		ctx.fill()
-		ctx.fillStyle = "aqua"
+		ctx.fillStyle = "white"
 		ctx.beginPath()
 		# ctx.arc SZ/2, SZ/2, SZ/2-0.01, 0, Math.PI * 2, no
 		ctx.arc SZ/2, SZ/2, SZ/3-0.2, 0, Math.PI * 2, no
