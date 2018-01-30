@@ -157,9 +157,9 @@ class @Chunk extends T.Object3D
 		ctx = canvas.getContext "2d"
 		# document.body.appendChild canvas
 		
-		ctx.fillStyle = "rgba(0, 0, 0, 0.5)"
-		ctx.fillRect(0, SZ/4, SZ, SZ/2)
-		ctx.fillRect(SZ/4, 0, SZ/2, SZ)
+		# ctx.fillStyle = "rgba(0, 0, 0, 0.5)"
+		# ctx.fillRect(0, SZ/4, SZ, SZ/2)
+		# ctx.fillRect(SZ/4, 0, SZ/2, SZ)
 		# ctx.fillRect(0, SZ/4, SZ, Math.sin(x)*SZ/2)
 		# ctx.fillRect(SZ/4, 0, Math.sin(y)*SZ/2, SZ)
 		
