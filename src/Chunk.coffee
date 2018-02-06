@@ -6,7 +6,7 @@ SZ = 150
 createChunkGeometry = ->
 	
 	# triangles = SZ * 4 * 3
-	triangles = SZ * 4 * 3
+	triangles = SZ * 2 * 3
 	geometry = new T.BufferGeometry()
 	# indices = new Uint32Array( triangles * 3 )
 	# for i in [0..indices.length]
@@ -69,7 +69,7 @@ createChunkGeometry = ->
 		# color.setHSL(((u.charCodeAt(0)/1.2 + v.charCodeAt(0)*2.5)%5)/5, z, z / SZ)
 		color.setHSL(((u.charCodeAt(0)*53.6 + v.charCodeAt(0)*2.5)%5)/5, 1, z / SZ)
 		
-		for vertices_index in [0, 1, 3, 1, 2, 3]
+		for vertices_index in [0, 1, 3, 0, 2, 3]
 			positions[positions_index++] = vertices[vertices_index].x
 			positions[positions_index++] = vertices[vertices_index].y
 			positions[positions_index++] = vertices[vertices_index].z
@@ -79,7 +79,8 @@ createChunkGeometry = ->
 			colors[colors_index++] = color.b * 255
 		
 		for uv_edge in [
-			0, 0,  0, 1,  1, 0
+			# 0, 0,  0, 1,  1, 0
+			0, 1,  1, 1,  1, 0
 			0, 1,  1, 1,  1, 0
 		]
 			uvs[uvs_index++] = uv_edge #* SZ
