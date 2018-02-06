@@ -40,6 +40,8 @@ RawGit links for commits on the `voxel-face` branch:
 
 * [rainbow cube of lines](https://rawgit.com/1j01/voxelite/a487a3f97eb8ce5930580cd8a33a8ba4f8b2bc84/index.html)
 
+* [fix the geometry](https://rawgit.com/1j01/voxelite/29e2f8b17f6cb30d7b79f745194d8b7e878fbe9e/index.html)
+
 ### the plan
 
 the plan/todo for VoxelFace is:
@@ -54,3 +56,30 @@ i.e. have different textures for the six directions instead of the three axes
 * could send the voxel data for use in the fragment shader, instead of precomputing textures on the CPU
 
 * could maybe have the chunk geometry generated in a geometry/vertex shader, but I doubt this would be a bottleneck, so there's probably no point!
+
+## plan b (or is it c? i think it's c, technically)
+
+if voxelface doesn't work out (and it probably won't),
+I have some ideas about optimizing a raymarcher,
+based on existing ideas about optimizing raymarchers,
+but what seems like the logical next step(s) (to me)
+
+* instead of just signed distance fields (spherical or cuboidal), six fields, one for each direction
+	* check for the minimum of the values for each of the 3 directions a ray is going
+		* maybe do something fancier/faster for when its direction vector is at least twice as much in one direction as another?
+			* (imagine a ray going along above a surface mostly parallel to it but still technically towards it in terms of just the signs of the components of its direction vector)
+	* this would involve a lot more data, six channels per voxel instead of one (excluding regular voxel data like material/color) which might make this less feasible
+		* reading from a much larger texture at 6 different points (or from six different textures) might be too big a performance hit
+		* if storing it in a texture the same size as with regular signed distance fields, unpacking a value into six values might be too slow and might severely limit the data (highest jump posibility, or well, I guess it could be scaled, e.g. 4 voxels minimum/unit jump, so just the fidelity/level of the optimization (to be clear, the end result would be the same other than speed, I don't mean fidelity of the rendered output)))
+
+* while we're storing extra data, why not store that same sort of data for (jumps within) 1. the single chunk and 2. a neighborhod of chunks
+	* (using the term neighborhoods rather than groups because they can overlap)
+	* when a chunk is modified, it can invalidate chunks within the neighborhood size, but they can fall back to the  
+	* the size could be 3x3x3 or whatever works best (maybe 3x3x1 if chunks are tall, or even 15x15x5 if it turns out this works well for many chunks; but it depends a lot on chunk size!)
+	* could maybe even *progressively* reoptimize, in a scanning matter, for the different directions, on the GPU
+
+but idk i've never implemented a ray/path tracer/marcher/caster/renderer
+
+i think i understand them enough to *hypothesize* about some optimizations,
+but i really don't know... like how to go about doing them on the GPU
+(how the shader accesses the data etc.)
