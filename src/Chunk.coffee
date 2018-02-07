@@ -87,7 +87,7 @@ class @Chunk extends T.Object3D
 		
 		canvas = document.createElement "canvas"
 		canvas.width = SZ
-		canvas.height = SZ #* SZ
+		canvas.height = SZ * SZ
 		tex = new T.Texture canvas
 		tex.minFilter = T.NearestFilter
 		tex.magFilter = T.NearestFilter
@@ -102,19 +102,23 @@ class @Chunk extends T.Object3D
 		# canvas.style.top = "0"
 
 		ctx = canvas.getContext "2d"
-		image_data = ctx.createImageData(SZ, SZ)# * SZ)
+		image_data = ctx.createImageData(SZ, SZ * SZ)
 		for x in [0..SZ]
 			for y in [0..SZ]
 				for z in [0..SZ]
 					index = (x + y * SZ + z * SZ * SZ) * 4
-					# color = new THREE.Color @get(x, y, z)
-					# image_data.data[index + 0] = color.r
-					# image_data.data[index + 1] = color.g
-					# image_data.data[index + 2] = color.b
-					image_data.data[index + 0] = Math.random() * 255
-					image_data.data[index + 1] = Math.random() * 255
-					image_data.data[index + 2] = Math.random() * 255
-					image_data.data[index + 3] = 255
+					value = @get(x, y, z)
+					# console.log value
+					# if value
+					if Math.random() < 0.001
+						# color = new THREE.Color value
+						# image_data.data[index + 0] = color.r * 255
+						# image_data.data[index + 1] = color.g * 255
+						# image_data.data[index + 2] = color.b * 255
+						image_data.data[index + 0] = Math.random() * 255
+						image_data.data[index + 1] = Math.random() * 255
+						image_data.data[index + 2] = Math.random() * 255
+						image_data.data[index + 3] = 255
 		ctx.putImageData(image_data, 0, 0)
 
 		# ctx.fillStyle = "red"
