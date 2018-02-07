@@ -1,7 +1,7 @@
 
 @chunks = []
 
-SZ = 150
+SZ = 32 #150
 
 createChunkGeometry = ->
 	
@@ -86,7 +86,8 @@ class @Chunk extends T.Object3D
 		@_sullied = no
 		
 		canvas = document.createElement "canvas"
-		canvas.width = canvas.height = SZ
+		canvas.width = SZ
+		canvas.height = SZ #* SZ
 		tex = new T.Texture canvas
 		tex.minFilter = T.NearestFilter
 		tex.magFilter = T.NearestFilter
@@ -94,23 +95,31 @@ class @Chunk extends T.Object3D
 		# mat = new T.MeshBasicMaterial wireframe: yes, vertexColors: T.VertexColors
 		mat.transparent = yes
 		mat.alphaTest = 0.5
-		
-		ctx = canvas.getContext "2d"
+
 		# document.body.appendChild canvas
 		# canvas.style.position = "absolute"
 		# canvas.style.right = "0"
 		# canvas.style.top = "0"
-		
-		ctx.fillStyle = "blue"
-		ctx.beginPath()
-		ctx.arc SZ/2, SZ/2, SZ/3, 0, Math.PI * 2, no
-		# ctx.arc SZ/2, SZ/2, SZ/2 * Math.sin(i/SZ), 0, Math.PI * 2, no
-		ctx.fill()
-		ctx.fillStyle = "white"
-		ctx.beginPath()
-		# ctx.arc SZ/2, SZ/2, SZ/2-0.01, 0, Math.PI * 2, no
-		ctx.arc SZ/2, SZ/2, SZ/3-0.2, 0, Math.PI * 2, no
-		ctx.fill()
+
+		ctx = canvas.getContext "2d"
+		image_data = ctx.createImageData(SZ, SZ)# * SZ)
+		for x in [0..SZ]
+			for y in [0..SZ]
+				for z in [0..SZ]
+					index = (x + y * SZ + z * SZ * SZ) * 4
+					# color = new THREE.Color @get(x, y, z)
+					# image_data.data[index + 0] = color.r
+					# image_data.data[index + 1] = color.g
+					# image_data.data[index + 2] = color.b
+					image_data.data[index + 0] = Math.random() * 255
+					image_data.data[index + 1] = Math.random() * 255
+					image_data.data[index + 2] = Math.random() * 255
+					image_data.data[index + 3] = 255
+		ctx.putImageData(image_data, 0, 0)
+
+		# ctx.fillStyle = "red"
+		# ctx.fillRect(0, 0, canvas.width, canvas.height)
+
 		tex.needsUpdate = yes
 		
 		geom = createChunkGeometry()
@@ -136,10 +145,10 @@ class @Chunk extends T.Object3D
 		@voxels[x*SZ*SZ + y*SZ + z] = v
 	
 	init: (fn)->
-		# for x in [0..SZ]
-		# 	for y in [0..SZ]
-		# 		for z in [0..SZ]
-		# 			@set x, y, z, fn(x+@x*SZ, y+@y*SZ, z+@z*SZ)
+		for x in [0..SZ]
+			for y in [0..SZ]
+				for z in [0..SZ]
+					@set x, y, z, fn(x+@x*SZ, y+@y*SZ, z+@z*SZ)
 	
 	update: ->
 		@debug.visible = scene.debug
