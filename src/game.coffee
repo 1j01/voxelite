@@ -131,6 +131,8 @@ stats = new Stats
 stats.domElement.style.position = "absolute"
 stats.domElement.style.left = "0px"
 stats.domElement.style.top = "0px"
+document.body.addEventListener "dblclick", ->
+	stats.domElement.style.display = if stats.domElement.style.display is "none" then "" else "none"
 
 document.body.appendChild stats.domElement
 
