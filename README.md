@@ -42,6 +42,10 @@ RawGit links for commits on the `voxel-face` branch:
 
 * [fix the geometry](https://rawgit.com/1j01/voxelite/29e2f8b17f6cb30d7b79f745194d8b7e878fbe9e/index.html)
 
+* [noise cube](https://github.com/1j01/voxelite/commit/40f32be89b830e99163e5f7e231d2e5b71453142)
+
+* [very sparse noise (try zooming in as far as you can)](https://github.com/1j01/voxelite/commit/089779ff5ff55c07b6b065008d5ba5c5e2097559)
+
 ### the plan
 
 the plan/todo for VoxelFace is:
