@@ -61,7 +61,7 @@ i.e. have different textures for the six directions instead of the three axes
 
 * could maybe have the chunk geometry generated in a geometry/vertex shader, but I doubt this would be a bottleneck, so there's probably no point!
 
-## Six-Axis SDF
+## Six-Axis SDF and Octant Distance Fields (ODF)
 
 If voxelface doesn't work out (and it probably won't),
 I have some ideas about **optimizing a raymarcher**,
@@ -79,8 +79,12 @@ but what seems like the logical next step(s) (to me)
 				* Compare a clever bit masking trick done on voxel occupancy masks described in this video: [Doubling the speed of my game's graphics [Voxel Devlog #18]](https://www.youtube.com/watch?v=P2bGF6GPmfc)
 					* It only works with small (4^3) voxel chunks, since it needs to fit the bit mask in an int64 (64=4^3 bits), although perhaps could be hierarchically applied to superchunks... he does say "tree" at one point, so maybe he's already doing that
 					* (Is it equivalent, though? I don't *think* it's equivalent, and probably this bit masking is a better idea, a truer version of a similar idea)
-  				* maybe it's not a fatal flaw, maybe I just had some different conception of it that got lost in translation...  
-				  What if instead of storing the nearest distance in a cardinal ray (flawed), or a cardinal plane sweep (correct but not necessarily fast), it stores the nearest distance in a *hemispherical* search. Like, SDF is normally spherical, grid SDF is cuboidal, right? But this would store the closest intersection point of any ray where a given axis is positive (or negative, depending on the side).
+			* (maybe it's not a fatal flaw, maybe I just had some different conception of it that got lost in translation...)  
+			  What if instead of storing the nearest distance in a cardinal ray (flawed), or a cardinal plane sweep (correct but not necessarily fast), it stores the nearest distance in a *hemispherical* search. Like, SDF is normally spherical, right? But this would store the closest intersection point of any ray where a given axis is positive (or negative, depending on the side).
+			* (If you have tons and tons of memory, you could store the distance to the nearest surface for every combination of...)
+			  Wait, there's only eight combinations of positive and negative for three axes. That would only be 33% more memory, and would shrink the hemisphere to a quarter of a hemisphere (an octant of a sphere), making it a much better approximation of the maximum safe distance to march in any direction. Yes, octants might be the way to go. Octant distance fields. 💡🎱👀
+				* Note: need to handle cardinal directions by carefully including zero in the range of vector components for ray angles when calculating the distance fields, in either the positive or negative set of fields (possibly both? would be safest, but not sure it's necessary), and making sure the appropriate field is used when some ray components are zero (if only the positive or only the negative set of fields are inclusive of zero)
+				* Also note: Euclidean distance isn't necessarily best for the fields for ray marching a voxel grid, and it's harder to calculate efficiently.
 	* this would involve a lot more data, six channels per voxel instead of one (excluding regular voxel data like material/color) which might make this less feasible
 		* reading from a much larger texture at 6 different points (or from six different textures) might be too big a performance hit
 		* if storing it in a texture the same size as with regular signed distance fields, unpacking a value into six values might be too slow and might severely limit the data (highest jump possibility, or well, I guess it could be scaled, e.g. 4 voxels minimum/unit jump, so just the fidelity/level of the optimization (to be clear, the end result would be the same other than speed, I don't mean fidelity of the rendered output))
