@@ -106,8 +106,19 @@ but what seems like the logical next step(s) (to me)
 		* Re-rendering them when a threshold is reached would likely cause a pop and be too expensive.
 		* Are they going to be far away enough that it's not a problem? Well, picture this: you can stay at a particular distance from a chunk, and circle all around it. So it would definitely be a problem.
 		* Could render the chunk from two different angles, and blend between them based on camera angle and depth information, for a pseudo 3D effect, and switch to new angles as needed, maybe storing old angle renders to avoid unnecessary re-rendering (at least one, making three total angle renders stored, to avoid very quickly needing to re-render when moving across an angular threshold)
+			* (The parallax shader would have to be significantly cheaper than ray marching, or else, one might as well just ray march the geometry!)
+				* (The billboards *could* comprise multiple chunks, which would balance the performance tradeoffs in favor of the billboards, but the same could be done with ray marching rendered chunks...)
 
 * could store depth info, for both billboards and raymarched geometry, in order to integrate other geometry (e.g. a player model) into the scene with depth testing
+
+* another idea I had, related to the parallax billboards, is to fully ray march a placeholder cuboid geometry the size of a chunk, in order to render chunks
+	* pro: sections of the screen where there are no chunks would not be ray marched
+	* pro: less ray marching steps, since the rays can start from the boundary of the chunk rather than the camera (either by projecting onto the chunk cuboid, or by using a depth map from pre-rendering the scene's depth at low resolution, combined with other parts of a [beam optimization described here](https://www.youtube.com/watch?v=P2bGF6GPmfc))
+	* pro: chunks can be arbitrarily oriented, allowing for things like destructible terrain that breaks into chunks with physics, complex character models, etc. with a single rendering method
+	* con: occluded chunks may be rendered... right? or can the shader bail out by looking at the depth buffer after some chunks have already rendered? (would have to render front-to-back for that to work)
+	* how would reflections work? would rays be able to cross chunk boundaries?
+	* When I thought of this idea in the past I thought it was a really cool idea but probably wouldn't work in practice (or else people would be doing it, right?) Well it turns out [it is feasible](https://www.youtube.com/watch?v=h81I8hR56vQ), and is apparently the basis of a really impressive voxel engine (assuming it's survived whatever rewrites). Douglas Dwyer, the engine's author, calls it "parallax ray marching".
+	* ((If you rendered a depth buffer of just the chunk boundaries and use that to inform where rays should start, you could also use that depth buffer as a stencil (whether using the stencil buffer, if that applies here (never used it) or just bailing out of the shader if the depth is infinite) and render everything in one pass, BUT it would have cases where it would need many more ray marching steps than a single chunk, if the ray goes through multiple chunks, since the depth info would only be for the nearest chunk even though chunks are only partially opaque, so it would be back to square one in the worst case, which would be a common case.))
 
 but idk i've never implemented a ray/path tracer/marcher/caster/renderer
 
